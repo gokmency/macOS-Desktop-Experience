@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, Folder, Star, Trash2, Archive, MoreHorizontal } from 'lucide-react';
 
 const NotesApp: React.FC = () => {
   const [selectedNote, setSelectedNote] = useState(0);
@@ -24,7 +24,9 @@ const NotesApp: React.FC = () => {
 - Keep plants alive for more than a month
 - Use all the apps I've downloaded
 - Actually finish reading those 47 books I started`,
-      date: 'Today'
+      date: 'Today',
+      folder: 'Personal',
+      starred: true
     },
     {
       title: 'Meeting Notes',
@@ -49,7 +51,9 @@ const NotesApp: React.FC = () => {
 - Schedule a meeting to discuss these meeting notes
 - Create a PowerPoint about why we need fewer PowerPoints
 - Touch base to discuss touching bases`,
-      date: '2 hours ago'
+      date: '2 hours ago',
+      folder: 'Work',
+      starred: false
     },
     {
       title: 'Grocery List',
@@ -73,7 +77,9 @@ const NotesApp: React.FC = () => {
 - Toilet paper (always toilet paper)
 
 *Note to self: Actually bring this list to the store instead of leaving it on the counter again.*`,
-      date: 'Yesterday'
+      date: 'Yesterday',
+      folder: 'Personal',
+      starred: false
     },
     {
       title: 'Random Thoughts',
@@ -95,12 +101,23 @@ const NotesApp: React.FC = () => {
 - Adult life is mostly just saying "I should really..." and then not doing it
 
 *Written at 3:17 AM because my brain apparently has no chill.*`,
-      date: '3 days ago'
+      date: '3 days ago',
+      folder: 'Personal',
+      starred: true
     }
   ]);
 
   const [editMode, setEditMode] = useState(false);
   const [editContent, setEditContent] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const folders = [
+    { name: 'All Notes', count: notes.length, icon: Folder },
+    { name: 'Personal', count: notes.filter(n => n.folder === 'Personal').length, icon: Folder },
+    { name: 'Work', count: notes.filter(n => n.folder === 'Work').length, icon: Folder },
+    { name: 'Starred', count: notes.filter(n => n.starred).length, icon: Star },
+    { name: 'Recently Deleted', count: 0, icon: Trash2 },
+  ];
 
   const handleEditStart = () => {
     setEditMode(true);
@@ -117,40 +134,91 @@ const NotesApp: React.FC = () => {
     setEditMode(false);
   };
 
+  const filteredNotes = notes.filter(note => 
+    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    note.content.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="h-full flex">
+    <div className="h-full flex bg-white">
       {/* Sidebar */}
-      <div className="w-64 bg-muted border-r border-border flex flex-col">
-        <div className="p-3 border-b border-border">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="font-semibold">Notes</h2>
-            <button className="p-1 hover:bg-accent rounded">
+      <div className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-lg font-semibold text-gray-900">Notes</h1>
+            <button className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
               <Plus className="w-4 h-4" />
             </button>
           </div>
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-2 top-2 text-muted-foreground" />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search notes..."
-              className="w-full pl-8 pr-3 py-1 text-sm bg-background border border-border rounded"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto">
-          {notes.map((note, index) => (
+        <div className="flex-1 p-2">
+          <div className="space-y-1 mb-4">
+            {folders.map((folder, index) => (
+              <div
+                key={index}
+                className="flex items-center space-x-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors"
+              >
+                <folder.icon className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">{folder.name}</span>
+                {folder.count > 0 && (
+                  <span className="text-xs bg-gray-300 text-gray-700 px-2 py-1 rounded-full ml-auto">
+                    {folder.count}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Notes list */}
+      <div className="w-80 border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200 bg-white">
+          <h2 className="font-semibold text-gray-900">All Notes</h2>
+          <div className="text-sm text-gray-500">{filteredNotes.length} notes</div>
+        </div>
+
+        <div className="flex-1">
+          {filteredNotes.map((note, index) => (
             <div
               key={index}
               onClick={() => setSelectedNote(index)}
-              className={`p-3 border-b border-border cursor-pointer hover:bg-accent ${
-                selectedNote === index ? 'bg-accent' : ''
+              className={`p-4 border-b border-gray-100 cursor-pointer transition-colors ${
+                selectedNote === index 
+                  ? 'bg-blue-50 border-l-4 border-l-blue-500' 
+                  : 'hover:bg-gray-50'
               }`}
             >
-              <div className="font-medium text-sm truncate">{note.title}</div>
-              <div className="text-xs text-muted-foreground mt-1">{note.date}</div>
-              <div className="text-xs text-muted-foreground truncate mt-1">
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-sm text-gray-900 truncate flex items-center">
+                    {note.title}
+                    {note.starred && <Star className="w-3 h-3 text-yellow-500 ml-2 fill-current" />}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">{note.date}</div>
+                </div>
+                <button className="p-1 hover:bg-gray-200 rounded">
+                  <MoreHorizontal className="w-4 h-4 text-gray-400" />
+                </button>
+              </div>
+              <div className="text-xs text-gray-600 truncate">
                 {note.content.split('\n')[0].replace('#', '').trim()}
+              </div>
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                  {note.folder}
+                </span>
               </div>
             </div>
           ))}
@@ -159,13 +227,16 @@ const NotesApp: React.FC = () => {
 
       {/* Note content */}
       <div className="flex-1 flex flex-col">
-        <div className="p-3 border-b border-border flex items-center justify-between">
-          <h3 className="font-semibold">{notes[selectedNote]?.title}</h3>
+        <div className="p-4 border-b border-gray-200 bg-white flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">{notes[selectedNote]?.title}</h3>
+            <div className="text-sm text-gray-500">{notes[selectedNote]?.date}</div>
+          </div>
           <div className="flex items-center space-x-2">
             {!editMode ? (
               <button 
                 onClick={handleEditStart}
-                className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90"
+                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Edit
               </button>
@@ -173,13 +244,13 @@ const NotesApp: React.FC = () => {
               <>
                 <button 
                   onClick={handleSave}
-                  className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90"
+                  className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Save
                 </button>
                 <button 
                   onClick={() => setEditMode(false)}
-                  className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded hover:bg-secondary/90"
+                  className="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
                 >
                   Cancel
                 </button>
@@ -188,34 +259,36 @@ const NotesApp: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex-1 p-4 overflow-auto">
+        <div className="flex-1 p-6 overflow-auto bg-white">
           {!editMode ? (
             <div className="prose prose-sm max-w-none">
               {notes[selectedNote]?.content.split('\n').map((line, index) => {
                 if (line.startsWith('# ')) {
-                  return <h1 key={index} className="text-xl font-bold mt-4 mb-2">{line.substring(2)}</h1>;
+                  return <h1 key={index} className="text-2xl font-bold mt-6 mb-4 text-gray-900">{line.substring(2)}</h1>;
                 } else if (line.startsWith('## ')) {
-                  return <h2 key={index} className="text-lg font-semibold mt-3 mb-2">{line.substring(3)}</h2>;
+                  return <h2 key={index} className="text-xl font-semibold mt-5 mb-3 text-gray-800">{line.substring(3)}</h2>;
                 } else if (line.startsWith('- [ ]')) {
                   return (
-                    <div key={index} className="flex items-center space-x-2 mb-1">
-                      <input type="checkbox" className="rounded" />
-                      <span>{line.substring(5)}</span>
+                    <div key={index} className="flex items-center space-x-3 mb-2">
+                      <input type="checkbox" className="rounded border-gray-300" />
+                      <span className="text-gray-700">{line.substring(5)}</span>
                     </div>
                   );
                 } else if (line.startsWith('- [x]')) {
                   return (
-                    <div key={index} className="flex items-center space-x-2 mb-1">
-                      <input type="checkbox" checked className="rounded" />
-                      <span className="line-through text-muted-foreground">{line.substring(5)}</span>
+                    <div key={index} className="flex items-center space-x-3 mb-2">
+                      <input type="checkbox" checked className="rounded border-gray-300" />
+                      <span className="line-through text-gray-500">{line.substring(5)}</span>
                     </div>
                   );
                 } else if (line.startsWith('- ')) {
-                  return <div key={index} className="ml-4 mb-1">• {line.substring(2)}</div>;
+                  return <div key={index} className="ml-6 mb-2 text-gray-700">• {line.substring(2)}</div>;
+                } else if (line.startsWith('**') && line.endsWith('**')) {
+                  return <div key={index} className="font-semibold text-gray-800 mb-2">{line.substring(2, line.length - 2)}</div>;
                 } else if (line.trim() === '') {
                   return <br key={index} />;
                 } else {
-                  return <p key={index} className="mb-2">{line}</p>;
+                  return <p key={index} className="mb-3 text-gray-700 leading-relaxed">{line}</p>;
                 }
               })}
             </div>
@@ -223,7 +296,7 @@ const NotesApp: React.FC = () => {
             <textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="w-full h-full resize-none border-none outline-none bg-transparent font-mono text-sm"
+              className="w-full h-full resize-none border-none outline-none bg-transparent font-mono text-sm text-gray-700 leading-relaxed"
               placeholder="Start writing..."
             />
           )}

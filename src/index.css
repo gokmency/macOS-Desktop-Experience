@@ -191,6 +191,23 @@ All colors MUST be HSL.
   .animate-fade-in {
     animation: fade-in 0.3s ease-out;
   }
+
+  /* Liquid Glass utilities */
+  .animate-liquid-glass {
+    animation: liquidGlass 3s ease-in-out infinite;
+  }
+  
+  .animate-glass-shimmer {
+    animation: glassShimmer 2s ease-in-out infinite;
+  }
+  
+  .animate-glass-float {
+    animation: glassFloat 4s ease-in-out infinite;
+  }
+  
+  .animate-move-background {
+    animation: moveBackground 60s linear infinite;
+  }
 }
 
 @keyframes dock-bounce {
@@ -214,4 +231,47 @@ All colors MUST be HSL.
 @keyframes fade-in {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+/* Liquid Glass Animations */
+@keyframes moveBackground {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 0% -1000%;
+  }
+}
+
+@keyframes liquidGlass {
+  0% { 
+    transform: scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+  50% { 
+    transform: scale(1.05) rotate(1deg);
+    filter: blur(1px);
+  }
+  100% { 
+    transform: scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+}
+
+@keyframes glassShimmer {
+  0% { 
+    background-position: -200% 0;
+  }
+  100% { 
+    background-position: 200% 0;
+  }
+}
+
+@keyframes glassFloat {
+  0%, 100% { 
+    transform: translateY(0px);
+  }
+  50% { 
+    transform: translateY(-10px);
+  }
 }

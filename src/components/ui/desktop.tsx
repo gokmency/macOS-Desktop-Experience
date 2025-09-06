@@ -4,6 +4,7 @@ import { APP_REGISTRY, DOCK_APPS } from '@/lib/app-registry';
 import MacOSDock from './mac-os-dock';
 import MenuBar from './menu-bar';
 import Window from './window';
+import { GlassFilter } from './liquid-glass';
 
 const Desktop: React.FC = () => {
   const {
@@ -11,6 +12,8 @@ const Desktop: React.FC = () => {
     openWindow,
     isAppOpen,
     getVisibleWindows,
+    closeWindow,
+    closeAllWindows,
   } = useDesktopStore();
 
   const handleAppClick = (appId: string) => {
@@ -31,6 +34,20 @@ const Desktop: React.FC = () => {
       width: appConfig.defaultSize.width,
       height: appConfig.defaultSize.height,
     });
+  };
+
+  const handleAppQuit = (appId: string) => {
+    // Tüm açık window'ları kapat
+    Object.values(windows).forEach(window => {
+      if (window.appId === appId) {
+        closeWindow(window.id);
+      }
+    });
+  };
+
+  // Tüm uygulamaları kapat
+  const closeAllApps = () => {
+    closeAllWindows();
   };
 
   const openApps = DOCK_APPS
@@ -58,16 +75,27 @@ const Desktop: React.FC = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden relative">
+      <GlassFilter />
+      
       {/* Wallpaper Background */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(/wallpapers/macos-mountains.jpg)',
+          backgroundImage: 'url("/wallpapers/macos-mountains.jpeg")',
         }}
       />
       
-      {/* Menu Bar */}
-      <MenuBar currentApp="Finder" />
+      {/* Glass overlay */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'rgba(255, 255, 255, 0.02)',
+          backdropFilter: 'blur(1px)'
+        }}
+      />
+      
+        {/* Menu Bar */}
+        <MenuBar currentApp="Finder" onCloseAllApps={closeAllApps} />
 
       {/* Desktop Content Area */}
       <div className="relative h-full pt-7 pb-20">
@@ -91,9 +119,10 @@ const Desktop: React.FC = () => {
 
       {/* Dock */}
       <div className="fixed bottom-2 left-1/2 transform -translate-x-1/2 z-40">
-        <MacOSDock
-          apps={DOCK_APPS}
+        <MacOSDock 
+          apps={DOCK_APPS} 
           onAppClick={handleAppClick}
+          onAppQuit={handleAppQuit}
           openApps={openApps}
         />
       </div>

@@ -8,6 +8,7 @@ import MusicApp from '@/components/apps/MusicApp';
 import CalendarApp from '@/components/apps/CalendarApp';
 import CalculatorApp from '@/components/apps/CalculatorApp';
 import TerminalApp from '@/components/apps/TerminalApp';
+import WeatherApp from '@/components/apps/WeatherApp';
 
 export interface AppConfig {
   id: string;
@@ -61,7 +62,7 @@ export const APP_REGISTRY: Record<string, AppConfig> = {
     name: 'Music',
     icon: 'https://cdn.jim-nielsen.com/macos/1024/music-2021-05-25.png?rf=1024',
     component: MusicApp,
-    defaultSize: { width: 800, height: 600 },
+    defaultSize: { width: 900, height: 700 },
   },
   calendar: {
     id: 'calendar',
@@ -83,6 +84,13 @@ export const APP_REGISTRY: Record<string, AppConfig> = {
     icon: 'https://cdn.jim-nielsen.com/macos/1024/terminal-2021-06-03.png?rf=1024',
     component: TerminalApp,
     defaultSize: { width: 700, height: 500 },
+  },
+  weather: {
+    id: 'weather',
+    name: 'Hava Durumu',
+    icon: '/havadurumulogo.png',
+    component: WeatherApp,
+    defaultSize: { width: 800, height: 600 },
   },
 };
 

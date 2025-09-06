@@ -22,6 +22,7 @@ interface DesktopStore {
   // Window management
   openWindow: (appId: string, config?: Partial<WindowState>) => string;
   closeWindow: (windowId: string) => void;
+  closeAllWindows: () => void;
   minimizeWindow: (windowId: string) => void;
   maximizeWindow: (windowId: string) => void;
   restoreWindow: (windowId: string) => void;
@@ -84,7 +85,7 @@ export const useDesktopStore = create<DesktopStore>()(
           ...config,
           zIndex: state.highestZIndex + 1,
           x: config.x ?? (100 + (Object.keys(state.windows).length * 30)),
-          y: config.y ?? (100 + (Object.keys(state.windows).length * 30)),
+          y: config.y ?? (150 + (Object.keys(state.windows).length * 30)),
         };
 
         set({
@@ -97,8 +98,15 @@ export const useDesktopStore = create<DesktopStore>()(
 
       closeWindow: (windowId) => {
         const state = get();
+        const window = state.windows[windowId];
+        console.log('Closing window:', windowId, window);
         const { [windowId]: removed, ...remainingWindows } = state.windows;
         set({ windows: remainingWindows });
+      },
+
+      closeAllWindows: () => {
+        console.log('Closing all windows');
+        set({ windows: {} });
       },
 
       minimizeWindow: (windowId) => {

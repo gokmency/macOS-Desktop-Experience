@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Müzik dosyaları (büyük dosyalar)
+public/music/
+!public/music/README.md

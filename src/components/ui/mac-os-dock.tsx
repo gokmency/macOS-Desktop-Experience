@@ -12,6 +12,7 @@ interface DockApp {
 interface MacOSDockProps {
   apps: DockApp[];
   onAppClick: (appId: string) => void;
+  onAppQuit?: (appId: string) => void;
   openApps?: string[];
   className?: string;
 }
@@ -19,16 +20,32 @@ interface MacOSDockProps {
 const MacOSDock: React.FC<MacOSDockProps> = ({ 
   apps, 
   onAppClick, 
+  onAppQuit,
   openApps = [],
   className = ''
 }) => {
   const [mouseX, setMouseX] = useState<number | null>(null);
   const [currentScales, setCurrentScales] = useState<number[]>(apps.map(() => 1));
   const [currentPositions, setCurrentPositions] = useState<number[]>([]);
+  const [contextMenu, setContextMenu] = useState<{ visible: boolean; x: number; y: number; appId: string } | null>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
   const animationFrameRef = useRef<number | undefined>(undefined);
   const lastMouseMoveTime = useRef<number>(0);
+
+  // Context menu'yu dışarı tıklandığında kapat
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (contextMenu) {
+        setContextMenu(null);
+      }
+    };
+
+    if (contextMenu) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [contextMenu]);
 
   // Responsive size calculations based on viewport
   const getResponsiveConfig = useCallback(() => {
@@ -228,6 +245,27 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
     onAppClick(appId);
   };
 
+  const handleContextMenu = (e: React.MouseEvent, appId: string) => {
+    e.preventDefault();
+    setContextMenu({
+      visible: true,
+      x: e.clientX,
+      y: e.clientY,
+      appId
+    });
+  };
+
+  const handleQuitApp = (appId: string) => {
+    if (onAppQuit) {
+      onAppQuit(appId);
+    }
+    setContextMenu(null);
+  };
+
+  const handleCloseContextMenu = () => {
+    setContextMenu(null);
+  };
+
   // Calculate content width
   const contentWidth = currentPositions.length > 0 
     ? Math.max(...currentPositions.map((pos, index) => 
@@ -240,11 +278,15 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
     return (
     <div 
       ref={dockRef}
-      className={`macos-glass macos-dock-shadow ${className}`}
+      className={`macos-glass macos-dock-shadow animate-glass-float ${className}`}
       style={{
         width: `${contentWidth + padding * 2}px`,
         borderRadius: `${Math.max(12, baseIconSize * 0.4)}px`,
-        padding: `${padding}px`
+        padding: `${padding}px`,
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -268,6 +310,7 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
               className="absolute cursor-pointer flex flex-col items-center justify-end"
               title={app.name}
               onClick={() => handleAppClick(app.id, index)}
+              onContextMenu={(e) => handleContextMenu(e, app.id)}
               style={{
                 left: `${position - scaledSize / 2}px`,
                 bottom: '0px',
@@ -306,6 +349,26 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
           );
         })}
       </div>
+      
+      {/* Context Menu */}
+      {contextMenu && (
+        <div
+          className="fixed bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg shadow-lg py-2 z-50"
+          style={{
+            left: contextMenu.x,
+            top: contextMenu.y - 50,
+            minWidth: '120px'
+          }}
+          onClick={handleCloseContextMenu}
+        >
+          <button
+            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors"
+            onClick={() => handleQuitApp(contextMenu.appId)}
+          >
+            Çık
+          </button>
+        </div>
+      )}
     </div>
   );
 };

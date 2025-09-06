@@ -193,35 +193,53 @@ const TerminalApp: React.FC = () => {
 
   return (
     <div 
-      className="h-full bg-black text-green-400 font-mono text-sm p-4 overflow-auto cursor-text"
+      className="h-full bg-gray-900 text-green-400 font-mono text-sm overflow-auto cursor-text"
       ref={containerRef}
       onClick={() => inputRef.current?.focus()}
     >
-      {/* Terminal output */}
-      {lines.map((line, index) => (
-        <div key={index} className={`whitespace-pre-wrap ${
-          line.type === 'command' ? 'text-yellow-400' : 
-          line.type === 'error' ? 'text-red-400' : 
-          'text-green-400'
-        }`}>
-          {line.content}
+      {/* Terminal header */}
+      <div className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <div className="flex space-x-1">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          </div>
+          <span className="text-gray-300 text-xs">Terminal</span>
         </div>
-      ))}
+        <div className="text-gray-400 text-xs">
+          user@macbook-air ~
+        </div>
+      </div>
 
-      {/* Current input line */}
-      <form onSubmit={handleSubmit} className="flex items-center">
-        <span className="text-yellow-400">$ </span>
-        <input
-          ref={inputRef}
-          type="text"
-          value={currentInput}
-          onChange={(e) => setCurrentInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent border-none outline-none text-green-400 ml-1"
-          autoFocus
-        />
-        <span className="animate-pulse">█</span>
-      </form>
+      {/* Terminal content */}
+      <div className="p-4">
+        {/* Terminal output */}
+        {lines.map((line, index) => (
+          <div key={index} className={`whitespace-pre-wrap mb-1 ${
+            line.type === 'command' ? 'text-yellow-400' : 
+            line.type === 'error' ? 'text-red-400' : 
+            'text-green-400'
+          }`}>
+            {line.content}
+          </div>
+        ))}
+
+        {/* Current input line */}
+        <form onSubmit={handleSubmit} className="flex items-center">
+          <span className="text-yellow-400">$ </span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={currentInput}
+            onChange={(e) => setCurrentInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="flex-1 bg-transparent border-none outline-none text-green-400 ml-1"
+            autoFocus
+          />
+          <span className="animate-pulse text-green-400">█</span>
+        </form>
+      </div>
     </div>
   );
 };

@@ -52,86 +52,110 @@ const PhotosApp: React.FC = () => {
   ];
 
   return (
-    <div className="h-full flex">
+    <div className="h-full flex bg-white">
       {/* Sidebar */}
-      <div className="w-64 bg-muted border-r border-border p-3">
+      <div className="w-64 bg-gray-50 border-r border-gray-200 p-4">
         <div className="mb-4">
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-2 top-2 text-muted-foreground" />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search photos..."
-              className="w-full pl-8 pr-3 py-1 text-sm bg-background border border-border rounded"
+              className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <div className="p-2 bg-primary text-primary-foreground rounded text-sm font-medium">
-            All Photos
-            <span className="float-right">{photos.length}</span>
+        <div className="space-y-1 mb-6">
+          <div className="flex items-center space-x-3 p-2 bg-blue-100 text-blue-700 rounded-lg">
+            <div className="w-4 h-4 bg-blue-600 rounded"></div>
+            <span className="text-sm font-medium">All Photos</span>
+            <span className="text-xs bg-blue-200 text-blue-700 px-2 py-1 rounded-full ml-auto">
+              {photos.length}
+            </span>
           </div>
-          <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Favorites</div>
-          <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Recently Added</div>
-          <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Screenshots</div>
+          <div className="flex items-center space-x-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+            <Heart className="w-4 h-4 text-gray-600" />
+            <span className="text-sm text-gray-700">Favorites</span>
+          </div>
+          <div className="flex items-center space-x-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+            <div className="w-4 h-4 bg-green-500 rounded"></div>
+            <span className="text-sm text-gray-700">Recently Added</span>
+          </div>
+          <div className="flex items-center space-x-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+            <div className="w-4 h-4 bg-purple-500 rounded"></div>
+            <span className="text-sm text-gray-700">Screenshots</span>
+          </div>
         </div>
 
-        <div className="mt-6 text-xs font-medium text-muted-foreground mb-2">ALBUMS</div>
-        <div className="space-y-1">
-          {albums.map((album, index) => (
-            <div key={index} className="p-2 hover:bg-accent rounded cursor-pointer">
-              <div className="text-sm">{album.name}</div>
-              <div className="text-xs text-muted-foreground">{album.count} photos</div>
-            </div>
-          ))}
+        <div className="border-t border-gray-200 pt-4">
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+            Albums
+          </div>
+          <div className="space-y-1">
+            {albums.map((album, index) => (
+              <div key={index} className="flex items-center space-x-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+                <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
+                  <span className="text-xs">📷</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-gray-900 truncate">{album.name}</div>
+                  <div className="text-xs text-gray-500">{album.count} photos</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <div className="p-4 border-b border-border flex items-center justify-between">
-          <h2 className="font-semibold">Pretending I'm on Vacation</h2>
+        <div className="p-4 border-b border-gray-200 bg-white flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">All Photos</h2>
+            <div className="text-sm text-gray-500">{photos.length} photos</div>
+          </div>
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1 rounded ${viewMode === 'grid' ? 'bg-accent' : 'hover:bg-accent'}`}
+              className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
             >
-              <Grid className="w-4 h-4" />
+              <Grid className="w-4 h-4 text-gray-600" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1 rounded ${viewMode === 'list' ? 'bg-accent' : 'hover:bg-accent'}`}
+              className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
             >
-              <List className="w-4 h-4" />
+              <List className="w-4 h-4 text-gray-600" />
             </button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto p-4">
+        <div className="flex-1 p-6">
           {viewMode === 'grid' ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {photos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="group relative bg-muted rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all"
+                  className="group relative bg-gray-100 rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200"
                 >
                   <img
                     src={photo.url}
                     alt={photo.title}
-                    className="w-full h-32 object-cover"
+                    className="w-full h-40 object-cover"
                   />
-                  <div className="p-2">
-                    <div className="text-xs font-medium truncate">{photo.title}</div>
-                    <div className="text-xs text-muted-foreground">{photo.date}</div>
+                  <div className="p-3">
+                    <div className="text-sm font-medium text-gray-900 truncate">{photo.title}</div>
+                    <div className="text-xs text-gray-500">{photo.date}</div>
                   </div>
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
-                    <button className="p-1 bg-white/20 rounded hover:bg-white/30">
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-3">
+                    <button className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
                       <Heart className="w-4 h-4 text-white" />
                     </button>
-                    <button className="p-1 bg-white/20 rounded hover:bg-white/30">
+                    <button className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
                       <Share className="w-4 h-4 text-white" />
                     </button>
-                    <button className="p-1 bg-white/20 rounded hover:bg-white/30">
+                    <button className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
                       <Download className="w-4 h-4 text-white" />
                     </button>
                   </div>
@@ -143,23 +167,23 @@ const PhotosApp: React.FC = () => {
               {photos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="flex items-center space-x-3 p-2 hover:bg-accent rounded cursor-pointer"
+                  className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
                 >
                   <img
                     src={photo.url}
                     alt={photo.title}
-                    className="w-12 h-12 object-cover rounded"
+                    className="w-16 h-16 object-cover rounded-lg"
                   />
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">{photo.title}</div>
-                    <div className="text-xs text-muted-foreground">{photo.date}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-gray-900 truncate">{photo.title}</div>
+                    <div className="text-xs text-gray-500">{photo.date}</div>
                   </div>
-                  <div className="flex items-center space-x-1">
-                    <button className="p-1 hover:bg-accent rounded">
-                      <Heart className="w-4 h-4" />
+                  <div className="flex items-center space-x-2">
+                    <button className="p-2 hover:bg-gray-200 rounded-lg">
+                      <Heart className="w-4 h-4 text-gray-600" />
                     </button>
-                    <button className="p-1 hover:bg-accent rounded">
-                      <Share className="w-4 h-4" />
+                    <button className="p-2 hover:bg-gray-200 rounded-lg">
+                      <Share className="w-4 h-4 text-gray-600" />
                     </button>
                   </div>
                 </div>
@@ -167,8 +191,8 @@ const PhotosApp: React.FC = () => {
             </div>
           )}
 
-          <div className="mt-8 p-6 bg-muted/50 rounded-lg text-center">
-            <div className="text-sm text-muted-foreground">
+          <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl text-center">
+            <div className="text-sm text-gray-600">
               "A picture is worth a thousand words, but I still can't remember where I took this." 
               <br />
               - Modern Photography Wisdom

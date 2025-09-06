@@ -1,32 +1,187 @@
-import React, { useState } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2, Shuffle, Repeat, Heart } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, Shuffle, Repeat, Heart, Plus, Music, Clock } from 'lucide-react';
+import { useMusicLibrary } from '@/hooks/use-music-library';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 const MusicApp: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSong, setCurrentSong] = useState(0);
+  const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.7);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { musicFiles, playlists, isLoading, addMusicFile } = useMusicLibrary();
 
-  const playlists = [
-    { name: 'Songs I Skip After 10 Seconds', count: 247 },
-    { name: 'Music to Procrastinate To', count: 89 },
-    { name: 'Shower Concert Hits', count: 34 },
-    { name: 'Songs I Pretend to Like at Parties', count: 67 },
-    { name: 'Emotional Damage (Breakup Playlist)', count: 156 },
-    { name: 'Coding Background Noise', count: 203 },
-  ];
+  const formatDuration = (seconds: number) => {
+    if (isNaN(seconds) || seconds === 0) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
-  const songs = [
-    { title: 'I Should Be Working', artist: 'Procrastination Symphony', album: 'Greatest Hits', duration: '3:42' },
-    { title: 'Five More Minutes', artist: 'The Snooze Button', album: 'Morning Struggles', duration: '4:15' },
-    { title: 'WiFi Password Blues', artist: 'Connection Lost', album: 'Technical Difficulties', duration: '2:58' },
-    { title: 'Coffee Withdrawal Syndrome', artist: 'Caffeine Dependency', album: 'Addiction Studies', duration: '3:23' },
-    { title: 'Meeting That Could Have Been an Email', artist: 'Corporate Wasteland', album: 'Office Space Soundtrack', duration: '5:47' },
-    { title: 'Charging Cable Tango', artist: 'Low Battery Panic', album: '1% Life', duration: '2:12' },
-    { title: 'Social Anxiety Waltz', artist: 'Awkward Interactions', album: 'Small Talk Nightmares', duration: '4:01' },
-    { title: 'Laundry Day Lament', artist: 'Clean Clothes Crisis', album: 'Adult Responsibilities', duration: '3:34' },
-  ];
+  const handleAddMusic = () => {
+    // Müzik dosyalarını yeniden tarayalım
+    const refreshMusic = async () => {
+      try {
+        // Basit bir dosya taraması simülasyonu
+        const newMusicFiles = [
+          {
+            id: Date.now().toString(),
+            name: 'Yeni Eklenen Şarkı',
+            artist: 'Yeni Sanatçı',
+            album: 'Yeni Albüm',
+            duration: 200,
+            url: '/music/new-song.mp3',
+            genre: 'Pop',
+            year: 2024
+          }
+        ];
+        
+        newMusicFiles.forEach(file => addMusicFile(file));
+      } catch (error) {
+        console.error('Müzik ekleme hatası:', error);
+      }
+    };
+    
+    refreshMusic();
+  };
+
+  // Audio player fonksiyonları
+  const initializeAudio = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+      audioRef.current.volume = volume;
+      
+      audioRef.current.addEventListener('timeupdate', () => {
+        if (audioRef.current) {
+          setCurrentTime(audioRef.current.currentTime);
+        }
+      });
+      
+      audioRef.current.addEventListener('loadedmetadata', () => {
+        if (audioRef.current) {
+          setDuration(audioRef.current.duration);
+        }
+      });
+      
+      audioRef.current.addEventListener('ended', () => {
+        setIsPlaying(false);
+        // Sonraki şarkıya geç
+        if (currentSong < currentSongs.length - 1) {
+          setCurrentSong(currentSong + 1);
+        }
+      });
+
+      audioRef.current.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        // Hata durumunda simülasyon yap
+        const song = currentSongs[currentSong];
+        if (song) {
+          setDuration(song.duration);
+          setIsPlaying(true);
+        }
+      });
+    }
+  };
+
+  const playMusic = () => {
+    if (currentSongs.length === 0) return;
+    
+    initializeAudio();
+    
+    if (audioRef.current) {
+      const song = currentSongs[currentSong];
+      audioRef.current.src = song.url;
+      audioRef.current.load(); // Dosyayı yeniden yükle
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+        console.log('Müzik oynatılıyor:', song.name);
+      }).catch((error) => {
+        console.error('Müzik oynatma hatası:', error);
+        // Gerçek dosya yoksa simülasyon yap
+        setIsPlaying(true);
+        setDuration(song.duration);
+        console.log('Simülasyon modunda oynatılıyor:', song.name);
+      });
+    }
+  };
+
+  const pauseMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setIsPlaying(false);
+  };
+
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      pauseMusic();
+    } else {
+      playMusic();
+    }
+  };
+
+  const playSong = (index: number) => {
+    setCurrentSong(index);
+    setIsPlaying(false);
+    // Şarkı değiştiğinde otomatik oynat
+    setTimeout(() => {
+      playMusic();
+    }, 100);
+  };
+
+  // İleri sarma fonksiyonu
+  const seekTo = (time: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+      setCurrentTime(time);
+    }
+  };
+
+  // Progress bar tıklama fonksiyonu
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (duration > 0 && audioRef.current) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const percentage = clickX / rect.width;
+      const newTime = percentage * duration;
+      seekTo(newTime);
+    }
+  };
+
+  // Önceki/Sonraki şarkı fonksiyonları
+  const playPreviousSong = () => {
+    if (currentSong > 0) {
+      playSong(currentSong - 1);
+    }
+  };
+
+  const playNextSong = () => {
+    if (currentSong < currentSongs.length - 1) {
+      playSong(currentSong + 1);
+    }
+  };
+
+  const currentSongs = selectedPlaylist 
+    ? playlists.find(p => p.id === selectedPlaylist)?.songs || musicFiles
+    : musicFiles;
+
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center">
+          <Music className="w-12 h-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
+          <p className="text-muted-foreground">Müzik kütüphanesi yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-b from-purple-900/20 to-background">
+    <div className="h-full flex flex-col bg-gradient-to-b from-purple-900/20 to-background" style={{ maxHeight: 'calc(100vh - 120px)' }}>
       {/* Header */}
       <div className="p-4 border-b border-border">
         <h1 className="text-2xl font-bold">Music</h1>
@@ -45,69 +200,118 @@ const MusicApp: React.FC = () => {
             <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Search</div>
           </div>
 
-          <div className="text-xs font-medium text-muted-foreground mb-2">LIBRARY</div>
+          <div className="text-xs font-medium text-muted-foreground mb-2">KÜTÜPHANE</div>
           <div className="space-y-1 mb-6">
-            <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Recently Added</div>
-            <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Artists</div>
-            <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Albums</div>
-            <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Songs</div>
+            <div 
+              className={`p-2 hover:bg-accent rounded cursor-pointer text-sm ${!selectedPlaylist ? 'bg-accent' : ''}`}
+              onClick={() => setSelectedPlaylist(null)}
+            >
+              Tüm Şarkılar
+            </div>
+            <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Sanatçılar</div>
+            <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Albümler</div>
+            <div className="p-2 hover:bg-accent rounded cursor-pointer text-sm">Türler</div>
           </div>
 
-          <div className="text-xs font-medium text-muted-foreground mb-2">PLAYLISTS</div>
+          <div className="text-xs font-medium text-muted-foreground mb-2">ÇALMA LİSTELERİ</div>
           <div className="space-y-1 max-h-48 overflow-auto">
-            {playlists.map((playlist, index) => (
-              <div key={index} className="p-2 hover:bg-accent rounded cursor-pointer">
-                <div className="text-sm truncate">{playlist.name}</div>
-                <div className="text-xs text-muted-foreground">{playlist.count} songs</div>
+            {playlists.map((playlist) => (
+              <div 
+                key={playlist.id} 
+                className={`p-2 hover:bg-accent rounded cursor-pointer ${selectedPlaylist === playlist.id ? 'bg-accent' : ''}`}
+                onClick={() => setSelectedPlaylist(playlist.id)}
+              >
+                <div className="text-sm truncate font-medium">{playlist.name}</div>
+                <div className="text-xs text-muted-foreground">{playlist.songs.length} şarkı</div>
               </div>
             ))}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full justify-start text-muted-foreground hover:text-foreground"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Yeni Çalma Listesi
+            </Button>
           </div>
         </div>
 
         {/* Main content */}
         <div className="flex-1 flex flex-col">
           {/* Now Playing / Song List */}
-          <div className="flex-1 overflow-auto p-4">
+          <div className="flex-1 p-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Songs I Skip After 10 Seconds</h2>
+              <h2 className="text-lg font-semibold">
+                {selectedPlaylist 
+                  ? playlists.find(p => p.id === selectedPlaylist)?.name || 'Çalma Listesi'
+                  : 'Tüm Şarkılar'
+                }
+              </h2>
               <div className="flex items-center space-x-2">
                 <button className="p-2 hover:bg-accent rounded">
                   <Shuffle className="w-4 h-4" />
                 </button>
-                <button className="px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-medium hover:bg-primary/90">
-                  Play
-                </button>
+                <Button 
+                  onClick={togglePlayPause}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-medium hover:bg-primary/90"
+                >
+                  {isPlaying ? 'Duraklat' : 'Çal'}
+                </Button>
               </div>
             </div>
 
-            <div className="space-y-1">
-              {songs.map((song, index) => (
-                <div
-                  key={index}
-                  onClick={() => setCurrentSong(index)}
-                  className={`flex items-center space-x-3 p-2 hover:bg-accent rounded cursor-pointer ${
-                    currentSong === index ? 'bg-accent' : ''
-                  }`}
-                >
-                  <div className="w-8 text-center text-sm text-muted-foreground">
-                    {currentSong === index && isPlaying ? (
-                      <div className="w-4 h-4 mx-auto bg-primary animate-pulse rounded-sm" />
-                    ) : (
-                      index + 1
+            {currentSongs.length === 0 ? (
+              <Card className="p-8 text-center">
+                <CardContent>
+                  <Music className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+                  <h3 className="text-lg font-semibold mb-2">Henüz müzik yok</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Müzik dosyalarınızı <code className="bg-muted px-2 py-1 rounded">public/music/</code> klasörüne ekleyin
+                  </p>
+                  <Button variant="outline" onClick={handleAddMusic}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Müzik Ekle
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-1">
+                {currentSongs.map((song, index) => (
+                  <div
+                    key={song.id}
+                    onClick={() => playSong(index)}
+                    className={`flex items-center space-x-3 p-2 hover:bg-accent rounded cursor-pointer group ${
+                      currentSong === index ? 'bg-accent' : ''
+                    }`}
+                  >
+                    <div className="w-8 text-center text-sm text-muted-foreground">
+                      {currentSong === index && isPlaying ? (
+                        <div className="w-4 h-4 mx-auto bg-primary animate-pulse rounded-sm" />
+                      ) : (
+                        index + 1
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium truncate">{song.name}</div>
+                      <div className="text-xs text-muted-foreground truncate">{song.artist}</div>
+                    </div>
+                    <div className="text-xs text-muted-foreground">{song.album}</div>
+                    {song.genre && (
+                      <Badge variant="secondary" className="text-xs">
+                        {song.genre}
+                      </Badge>
                     )}
+                    <button className="p-1 hover:bg-accent rounded opacity-0 group-hover:opacity-100">
+                      <Heart className="w-4 h-4" />
+                    </button>
+                    <div className="text-xs text-muted-foreground w-12 text-right flex items-center">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {formatDuration(song.duration)}
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium truncate">{song.title}</div>
-                    <div className="text-xs text-muted-foreground truncate">{song.artist}</div>
-                  </div>
-                  <div className="text-xs text-muted-foreground">{song.album}</div>
-                  <button className="p-1 hover:bg-accent rounded opacity-0 group-hover:opacity-100">
-                    <Heart className="w-4 h-4" />
-                  </button>
-                  <div className="text-xs text-muted-foreground w-12 text-right">{song.duration}</div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -118,11 +322,15 @@ const MusicApp: React.FC = () => {
           {/* Currently playing */}
           <div className="flex items-center space-x-3 flex-1">
             <div className="w-12 h-12 bg-primary/20 rounded flex items-center justify-center">
-              <Play className="w-5 h-5 text-primary" />
+              <Music className="w-5 h-5 text-primary" />
             </div>
             <div className="min-w-0">
-              <div className="text-sm font-medium truncate">{songs[currentSong]?.title}</div>
-              <div className="text-xs text-muted-foreground truncate">{songs[currentSong]?.artist}</div>
+              <div className="text-sm font-medium truncate">
+                {currentSongs[currentSong]?.name || 'Şarkı seçilmedi'}
+              </div>
+              <div className="text-xs text-muted-foreground truncate">
+                {currentSongs[currentSong]?.artist || 'Sanatçı'}
+              </div>
             </div>
           </div>
 
@@ -131,16 +339,24 @@ const MusicApp: React.FC = () => {
             <button className="p-1 hover:bg-accent rounded">
               <Shuffle className="w-4 h-4" />
             </button>
-            <button className="p-1 hover:bg-accent rounded">
+            <button 
+              onClick={playPreviousSong}
+              className="p-1 hover:bg-accent rounded"
+              disabled={currentSong === 0}
+            >
               <SkipBack className="w-4 h-4" />
             </button>
             <button
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={togglePlayPause}
               className="p-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/90"
             >
               {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
             </button>
-            <button className="p-1 hover:bg-accent rounded">
+            <button 
+              onClick={playNextSong}
+              className="p-1 hover:bg-accent rounded"
+              disabled={currentSong === currentSongs.length - 1}
+            >
               <SkipForward className="w-4 h-4" />
             </button>
             <button className="p-1 hover:bg-accent rounded">
@@ -151,19 +367,39 @@ const MusicApp: React.FC = () => {
           {/* Volume */}
           <div className="flex items-center space-x-2 flex-1 justify-end">
             <Volume2 className="w-4 h-4" />
-            <div className="w-20 h-1 bg-muted rounded overflow-hidden">
-              <div className="w-3/4 h-full bg-primary rounded" />
-            </div>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={volume}
+              onChange={(e) => {
+                const newVolume = parseFloat(e.target.value);
+                setVolume(newVolume);
+                if (audioRef.current) {
+                  audioRef.current.volume = newVolume;
+                }
+              }}
+              className="w-20"
+            />
           </div>
         </div>
 
         {/* Progress bar */}
         <div className="flex items-center space-x-2 mt-2">
-          <div className="text-xs text-muted-foreground">1:23</div>
-          <div className="flex-1 h-1 bg-muted rounded overflow-hidden">
-            <div className="w-1/3 h-full bg-primary rounded" />
+          <div className="text-xs text-muted-foreground">{formatDuration(currentTime)}</div>
+          <div 
+            className="flex-1 h-1 bg-muted rounded overflow-hidden cursor-pointer"
+            onClick={handleProgressClick}
+          >
+            <div 
+              className="h-full bg-primary rounded transition-all duration-100"
+              style={{ 
+                width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%' 
+              }}
+            />
           </div>
-          <div className="text-xs text-muted-foreground">3:42</div>
+          <div className="text-xs text-muted-foreground">{formatDuration(duration)}</div>
         </div>
       </div>
     </div>

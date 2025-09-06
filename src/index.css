@@ -8,80 +8,59 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Authentic MacOS Color Palette - Monterey/Ventura inspired */
-    --background: 228 7% 14%;
+    /* MacOS Color Palette */
+    --background: 220 13% 18%;
     --foreground: 210 20% 98%;
 
-    --card: 228 8% 12%;
+    --card: 220 13% 16%;
     --card-foreground: 210 20% 98%;
 
-    --popover: 228 8% 12%;
+    --popover: 220 13% 16%;
     --popover-foreground: 210 20% 98%;
 
-    --primary: 211 96% 60%;
+    --primary: 212 100% 50%;
     --primary-foreground: 210 20% 98%;
 
-    --secondary: 228 7% 18%;
+    --secondary: 220 13% 21%;
     --secondary-foreground: 210 20% 98%;
 
-    --muted: 228 7% 18%;
+    --muted: 220 13% 21%;
     --muted-foreground: 210 11% 71%;
 
-    --accent: 211 96% 60%;
+    --accent: 212 100% 50%;
     --accent-foreground: 210 20% 98%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 91% 71%;
     --destructive-foreground: 210 20% 98%;
 
-    --border: 228 7% 25%;
-    --input: 228 7% 25%;
-    --ring: 211 96% 60%;
+    --border: 220 13% 28%;
+    --input: 220 13% 28%;
+    --ring: 212 100% 50%;
 
-    --radius: 0.875rem;
+    --radius: 0.75rem;
 
-    /* Authentic MacOS Traffic Light Colors */
-    --macos-red: 0 84% 60%;
-    --macos-yellow: 40 100% 55%;
-    --macos-green: 145 63% 49%;
+    /* MacOS Specific Colors */
+    --macos-red: 0 91% 71%;
+    --macos-yellow: 48 100% 67%;
+    --macos-green: 120 100% 40%;
+    --macos-dock: 220 13% 18%;
+    --macos-menubar: 220 13% 16%;
+    --macos-window: 220 13% 21%;
+    --macos-titlebar: 220 13% 18%;
+    --macos-glass: 220 13% 18%;
     
-    /* MacOS System Colors - More Authentic */
-    --macos-dock: 228 8% 12%;
-    --macos-menubar: 228 8% 10%;
-    --macos-window: 228 7% 16%;
-    --macos-titlebar: 228 8% 12%;
-    --macos-sidebar: 228 7% 14%;
+    /* Shadows & Effects */
+    --shadow-window: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --shadow-dock: 0 16px 32px -8px rgba(0, 0, 0, 0.4);
+    --shadow-menubar: 0 2px 8px rgba(0, 0, 0, 0.15);
     
-    /* Enhanced Glassmorphism Effects */
-    --glass-dock: rgba(30, 30, 35, 0.85);
-    --glass-menubar: rgba(25, 25, 30, 0.95);
-    --glass-window: rgba(35, 35, 40, 0.95);
-    --glass-border-strong: rgba(255, 255, 255, 0.18);
-    --glass-border-subtle: rgba(255, 255, 255, 0.08);
+    /* Glassmorphism */
+    --glass-backdrop: rgba(45, 45, 45, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.15);
     
-    /* Authentic MacOS Shadows & Depth */
-    --shadow-window: 
-      0 32px 64px -12px rgba(0, 0, 0, 0.6),
-      0 18px 36px -18px rgba(0, 0, 0, 0.4),
-      0 6px 12px rgba(0, 0, 0, 0.25);
-    --shadow-dock: 
-      0 20px 40px -8px rgba(0, 0, 0, 0.5),
-      0 8px 16px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    --shadow-menubar: 
-      0 1px 3px rgba(0, 0, 0, 0.2),
-      0 4px 12px rgba(0, 0, 0, 0.15);
-    --shadow-icon: 0 2px 8px rgba(0, 0, 0, 0.3);
-    
-    /* Enhanced Transitions & Springs */
-    --transition-smooth: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    --transition-dock: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
-    --transition-window: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    
-    /* Gradients for Depth */
-    --gradient-dock: linear-gradient(180deg, rgba(50, 50, 55, 0.9) 0%, rgba(25, 25, 30, 0.95) 100%);
-    --gradient-menubar: linear-gradient(180deg, rgba(35, 35, 40, 0.98) 0%, rgba(25, 25, 30, 1) 100%);
-    --gradient-window: linear-gradient(145deg, rgba(40, 40, 45, 0.98) 0%, rgba(30, 30, 35, 0.96) 100%);
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -146,59 +125,20 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
-    font-feature-settings: "liga" 1, "kern" 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-  }
-  
-  /* MacBook-style notch for modern feel */
-  .macbook-screen {
-    border-radius: 12px;
-    position: relative;
-  }
-  
-  .macbook-screen::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    height: 28px;
-    background: hsl(var(--background));
-    border-radius: 0 0 16px 16px;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    overflow: hidden; /* Prevent scrolling on desktop */
   }
 }
 
 @layer components {
-  /* Enhanced MacOS Glass Effects */
+  /* MacOS Glass Effect */
   .macos-glass {
-    background: var(--glass-dock);
-    backdrop-filter: blur(32px) saturate(180%);
-    -webkit-backdrop-filter: blur(32px) saturate(180%);
-    border: 1px solid var(--glass-border-strong);
+    background: var(--glass-backdrop);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
   }
   
-  .macos-glass-menubar {
-    background: var(--gradient-menubar);
-    backdrop-filter: blur(24px) saturate(150%);
-    -webkit-backdrop-filter: blur(24px) saturate(150%);
-    border-bottom: 1px solid var(--glass-border-subtle);
-  }
-  
-  .macos-glass-window {
-    background: var(--gradient-window);
-    backdrop-filter: blur(28px) saturate(160%);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
-    border: 1px solid var(--glass-border-strong);
-  }
-  
-  /* Enhanced MacOS Shadows */
+  /* MacOS Window Shadows */
   .macos-window-shadow {
     box-shadow: var(--shadow-window);
   }
@@ -211,184 +151,67 @@ All colors MUST be HSL.
     box-shadow: var(--shadow-menubar);
   }
   
-  .macos-icon-shadow {
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25));
-  }
-  
-  /* Authentic Traffic Light Buttons */
+  /* Traffic Light Buttons */
   .traffic-light {
-    @apply w-3 h-3 rounded-full border border-white/10 transition-all duration-200 relative overflow-hidden;
-    box-shadow: 
-      inset 0 1px 0 rgba(255, 255, 255, 0.3),
-      0 1px 2px rgba(0, 0, 0, 0.3);
-  }
-  
-  .traffic-light::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
-    border-radius: 50%;
-  }
-  
-  .traffic-light:hover {
-    transform: scale(1.1);
-    box-shadow: 
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      0 2px 4px rgba(0, 0, 0, 0.4);
+    @apply w-3 h-3 rounded-full transition-all duration-200;
   }
   
   .traffic-light-red {
-    background: radial-gradient(circle at 30% 30%, hsl(var(--macos-red)), hsl(0 84% 45%));
+    background: hsl(var(--macos-red));
   }
   
   .traffic-light-yellow {
-    background: radial-gradient(circle at 30% 30%, hsl(var(--macos-yellow)), hsl(40 100% 40%));
+    background: hsl(var(--macos-yellow));
   }
   
   .traffic-light-green {
-    background: radial-gradient(circle at 30% 30%, hsl(var(--macos-green)), hsl(145 63% 35%));
+    background: hsl(var(--macos-green));
   }
   
-  /* Enhanced MacOS Transitions */
+  /* Smooth MacOS Transitions */
   .macos-transition {
     transition: var(--transition-smooth);
   }
   
-  .macos-spring {
-    transition: var(--transition-spring);
-  }
-  
-  .macos-dock-transition {
-    transition: var(--transition-dock);
-  }
-  
-  .macos-window-transition {
-    transition: var(--transition-window);
-  }
-  
-  /* Hover Effects */
-  .macos-hover {
-    @apply transition-all duration-200;
-  }
-  
-  .macos-hover:hover {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(8px);
-  }
-  
-  /* Focus States */
-  .macos-focus:focus {
-    outline: 2px solid hsl(var(--primary));
-    outline-offset: 2px;
+  .macos-bounce {
+    transition: var(--transition-bounce);
   }
 }
 
 @layer utilities {
-  /* Enhanced Animation Utilities */
+  /* Animation utilities */
   .animate-dock-bounce {
-    animation: dock-bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: dock-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
   
   .animate-window-appear {
-    animation: window-appear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: window-appear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .animate-fade-in {
-    animation: fade-in 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-  
-  .animate-scale-in {
-    animation: scale-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  
-  .animate-slide-up {
-    animation: slide-up 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-  
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
+    animation: fade-in 0.3s ease-out;
   }
 }
 
-/* Enhanced Keyframes */
 @keyframes dock-bounce {
-  0% { 
-    transform: translateY(0) scale(1);
-  }
-  25% { 
-    transform: translateY(-24px) scale(1.08);
-  }
-  50% { 
-    transform: translateY(-12px) scale(1.04);
-  }
-  75% { 
-    transform: translateY(-6px) scale(1.02);
-  }
-  100% { 
-    transform: translateY(0) scale(1);
-  }
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-20px) scale(1.05); }
+  60% { transform: translateY(-10px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
 }
 
 @keyframes window-appear {
   0% { 
-    transform: scale(0.85) translateY(30px) rotateX(8deg);
+    transform: scale(0.8) translateY(20px);
     opacity: 0;
-    filter: blur(4px);
-  }
-  60% { 
-    transform: scale(1.02) translateY(-2px) rotateX(0deg);
-    opacity: 0.9;
-    filter: blur(0px);
   }
   100% { 
-    transform: scale(1) translateY(0) rotateX(0deg);
+    transform: scale(1) translateY(0);
     opacity: 1;
-    filter: blur(0px);
   }
 }
 
 @keyframes fade-in {
-  0% { 
-    opacity: 0; 
-    transform: translateY(8px);
-  }
-  100% { 
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scale-in {
-  0% { 
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  100% { 
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-up {
-  0% { 
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  100% { 
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes glow {
-  0% { 
-    box-shadow: 0 0 5px hsl(var(--primary) / 0.5);
-  }
-  100% { 
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.8);
-  }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }

@@ -240,14 +240,16 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
     return (
     <div 
       ref={dockRef}
-      className={`macos-glass macos-dock-shadow ${className}`}
+      className={`macos-glass macos-dock-shadow relative overflow-hidden ${className}`}
       style={{
         width: `${contentWidth + padding * 2}px`,
-        borderRadius: `${Math.max(12, baseIconSize * 0.4)}px`,
-        padding: `${padding}px`
+        borderRadius: `${Math.max(16, baseIconSize * 0.35)}px`,
+        padding: `${padding}px`,
+        background: 'var(--gradient-dock)',
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      data-dock
     >
       <div 
         className="relative"
@@ -282,23 +284,30 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
                 alt={app.name}
                 width={scaledSize}
                 height={scaledSize}
-                className="object-contain"
+                className="object-contain macos-dock-transition"
                 style={{
-                  filter: `drop-shadow(0 ${scale > 1.2 ? Math.max(2, baseIconSize * 0.05) : Math.max(1, baseIconSize * 0.03)}px ${scale > 1.2 ? Math.max(4, baseIconSize * 0.1) : Math.max(2, baseIconSize * 0.06)}px rgba(0,0,0,${0.2 + (scale - 1) * 0.15}))`
+                  filter: `
+                    drop-shadow(0 ${scale > 1.2 ? Math.max(3, baseIconSize * 0.06) : Math.max(2, baseIconSize * 0.04)}px ${scale > 1.2 ? Math.max(8, baseIconSize * 0.12) : Math.max(4, baseIconSize * 0.08)}px rgba(0,0,0,${0.25 + (scale - 1) * 0.2}))
+                    brightness(${0.95 + (scale - 1) * 0.1})
+                    contrast(${1 + (scale - 1) * 0.05})
+                  `,
+                  borderRadius: `${Math.max(4, baseIconSize * 0.08)}px`,
                 }}
               />
               
-              {/* App Indicator Dot */}
+              {/* Enhanced App Indicator Dot */}
               {openApps.includes(app.id) && (
                 <div 
-                  className="absolute bg-white/80 rounded-full"
+                  className="absolute rounded-full macos-dock-transition"
                   style={{
-                    bottom: `${Math.max(-2, -baseIconSize * 0.05)}px`,
+                    bottom: `${Math.max(-3, -baseIconSize * 0.06)}px`,
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    width: `${Math.max(3, baseIconSize * 0.06)}px`,
-                    height: `${Math.max(3, baseIconSize * 0.06)}px`,
-                    boxShadow: '0 0 4px rgba(0, 0, 0, 0.3)',
+                    width: `${Math.max(4, baseIconSize * 0.07)}px`,
+                    height: `${Math.max(4, baseIconSize * 0.07)}px`,
+                    background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 70%, rgba(255, 255, 255, 0.4) 100%)',
+                    boxShadow: '0 0 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+                    border: '0.5px solid rgba(255, 255, 255, 0.3)',
                   }}
                 />
               )}

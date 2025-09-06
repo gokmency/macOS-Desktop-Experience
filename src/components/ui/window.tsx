@@ -141,49 +141,52 @@ const Window: React.FC<WindowProps> = ({ windowId, children }) => {
   return (
     <div
       ref={windowRef}
-      className="absolute bg-macos-window border border-macos-titlebar macos-window-shadow animate-window-appear"
+      className="absolute macos-glass-window macos-window-shadow animate-window-appear macos-window-transition rounded-xl overflow-hidden"
       style={windowStyle}
       onClick={() => focusWindow(windowId)}
     >
-      {/* Title Bar */}
+      {/* Enhanced Title Bar */}
       <div
-        className="flex items-center justify-between h-7 bg-macos-titlebar px-3 cursor-move select-none"
+        className="flex items-center justify-between h-8 bg-gradient-to-r from-macos-titlebar/95 to-macos-titlebar/90 px-4 cursor-move select-none backdrop-blur-sm border-b border-white/5"
         onMouseDown={handleMouseDown}
       >
-        {/* Traffic Lights */}
+        {/* Enhanced Traffic Lights */}
         <div className="flex items-center space-x-2">
           <button
-            className="traffic-light traffic-light-red hover:opacity-80 transition-opacity"
+            className="traffic-light traffic-light-red macos-focus"
             onClick={(e) => {
               e.stopPropagation();
               closeWindow(windowId);
             }}
             title="Close (⌘W)"
+            aria-label="Close window"
           />
           <button
-            className="traffic-light traffic-light-yellow hover:opacity-80 transition-opacity"
+            className="traffic-light traffic-light-yellow macos-focus"
             onClick={(e) => {
               e.stopPropagation();
               minimizeWindow(windowId);
             }}
             title="Minimize (⌘M)"
+            aria-label="Minimize window"
           />
           <button
-            className="traffic-light traffic-light-green hover:opacity-80 transition-opacity"
+            className="traffic-light traffic-light-green macos-focus"
             onClick={(e) => {
               e.stopPropagation();
               maximizeWindow(windowId);
             }}
             title="Maximize (⌘↑)"
+            aria-label="Maximize window"
           />
         </div>
 
-        {/* Window Title */}
-        <div className="text-sm text-foreground font-medium pointer-events-none">
+        {/* Enhanced Window Title */}
+        <div className="text-sm text-foreground/90 font-medium pointer-events-none tracking-tight">
           {title}
         </div>
 
-        <div className="w-[54px]" /> {/* Spacer for centering */}
+        <div className="w-[66px]" /> {/* Spacer for centering */}
       </div>
 
       {/* Window Content */}

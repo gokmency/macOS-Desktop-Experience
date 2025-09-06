@@ -57,12 +57,13 @@ const Desktop: React.FC = () => {
   }, []);
 
   return (
-    <div className="h-screen w-screen overflow-hidden relative">
-      {/* Wallpaper Background */}
+    <div className="h-screen w-screen overflow-hidden relative macbook-screen">
+      {/* Enhanced Wallpaper Background */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat animate-fade-in"
         style={{
-          backgroundImage: 'url(/wallpapers/macos-mountains.jpg)',
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1)), url(/wallpapers/macos-mountains.jpg)',
+          filter: 'contrast(1.05) brightness(0.95) saturate(1.1)',
         }}
       />
       
@@ -89,12 +90,13 @@ const Desktop: React.FC = () => {
         </div>
       </div>
 
-      {/* Dock */}
-      <div className="fixed bottom-2 left-1/2 transform -translate-x-1/2 z-40">
+      {/* Enhanced Dock */}
+      <div className="fixed bottom-3 left-1/2 transform -translate-x-1/2 z-40 animate-slide-up">
         <MacOSDock
           apps={DOCK_APPS}
           onAppClick={handleAppClick}
           openApps={openApps}
+          className="macos-dock-transition"
         />
       </div>
 

@@ -2,41 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* MacOS Design System - All colors, gradients, fonts, etc defined here. 
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* MacOS Color Palette */
+    --background: 220 13% 18%;
+    --foreground: 210 20% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 220 13% 16%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 220 13% 16%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 212 100% 50%;
+    --primary-foreground: 210 20% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 220 13% 21%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 13% 21%;
+    --muted-foreground: 210 11% 71%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 212 100% 50%;
+    --accent-foreground: 210 20% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 91% 71%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 13% 28%;
+    --input: 220 13% 28%;
+    --ring: 212 100% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* MacOS Specific Colors */
+    --macos-red: 0 91% 71%;
+    --macos-yellow: 48 100% 67%;
+    --macos-green: 120 100% 40%;
+    --macos-dock: 220 13% 18%;
+    --macos-menubar: 220 13% 16%;
+    --macos-window: 220 13% 21%;
+    --macos-titlebar: 220 13% 18%;
+    --macos-glass: 220 13% 18%;
+    
+    /* Shadows & Effects */
+    --shadow-window: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --shadow-dock: 0 16px 32px -8px rgba(0, 0, 0, 0.4);
+    --shadow-menubar: 0 2px 8px rgba(0, 0, 0, 0.15);
+    
+    /* Glassmorphism */
+    --glass-backdrop: rgba(45, 45, 45, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +125,93 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    overflow: hidden; /* Prevent scrolling on desktop */
   }
+}
+
+@layer components {
+  /* MacOS Glass Effect */
+  .macos-glass {
+    background: var(--glass-backdrop);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+  }
+  
+  /* MacOS Window Shadows */
+  .macos-window-shadow {
+    box-shadow: var(--shadow-window);
+  }
+  
+  .macos-dock-shadow {
+    box-shadow: var(--shadow-dock);
+  }
+  
+  .macos-menubar-shadow {
+    box-shadow: var(--shadow-menubar);
+  }
+  
+  /* Traffic Light Buttons */
+  .traffic-light {
+    @apply w-3 h-3 rounded-full transition-all duration-200;
+  }
+  
+  .traffic-light-red {
+    background: hsl(var(--macos-red));
+  }
+  
+  .traffic-light-yellow {
+    background: hsl(var(--macos-yellow));
+  }
+  
+  .traffic-light-green {
+    background: hsl(var(--macos-green));
+  }
+  
+  /* Smooth MacOS Transitions */
+  .macos-transition {
+    transition: var(--transition-smooth);
+  }
+  
+  .macos-bounce {
+    transition: var(--transition-bounce);
+  }
+}
+
+@layer utilities {
+  /* Animation utilities */
+  .animate-dock-bounce {
+    animation: dock-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .animate-window-appear {
+    animation: window-appear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+}
+
+@keyframes dock-bounce {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-20px) scale(1.05); }
+  60% { transform: translateY(-10px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes window-appear {
+  0% { 
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+  }
+  100% { 
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }

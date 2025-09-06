@@ -47,6 +47,16 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        macos: {
+          red: "hsl(var(--macos-red))",
+          yellow: "hsl(var(--macos-yellow))",
+          green: "hsl(var(--macos-green))",
+          dock: "hsl(var(--macos-dock))",
+          menubar: "hsl(var(--macos-menubar))",
+          window: "hsl(var(--macos-window))",
+          titlebar: "hsl(var(--macos-titlebar))",
+          glass: "hsl(var(--macos-glass))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

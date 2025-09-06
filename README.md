@@ -1,10 +1,78 @@
-# Welcome to your Lovable project
+# MacOS Desktop Experience
 
-## Project info
+A beautiful, functional MacOS desktop experience built with React, TypeScript, and Tailwind CSS. Features a working dock with magnification effects, draggable/resizable windows, and humorous app content.
 
-**URL**: https://lovable.dev/projects/e2ab39ea-fd01-4e3b-8a2b-a165aa010123
+## ✨ Features
 
-## How can I edit this code?
+- **Authentic MacOS Dock** - Magnification effects, bounce animations, and app indicators
+- **Window Management** - Draggable, resizable windows with MacOS-style traffic lights
+- **Persistent State** - Window positions and states saved in localStorage
+- **Keyboard Shortcuts** - ⌘+W (close), ⌘+M (minimize), ⌘+↑ (maximize), Esc (unfocus)
+- **Responsive Design** - Works on desktop and mobile devices
+- **Funny Apps** - 9 humorous but functional apps with witty content
+
+## 🎯 Apps Included
+
+- **Finder** - Browse hilariously named files and folders
+- **Safari** - A productivity tips page with the ultimate advice
+- **Mail** - Inbox full of relatable newsletters and spam
+- **Notes** - Markdown editor with amusing life observations
+- **Photos** - Gallery of "vacation" photos with sarcastic titles
+- **Music** - Playlist of procrastination anthems
+- **Calendar** - Schedule packed with absurd meetings
+- **Calculator** - Fully functional with mathematical wisdom
+- **Terminal** - Interactive shell with witty commands
+
+## 🏗️ Architecture
+
+### Component Structure (`/src/components/`)
+
+- **ui/** - shadcn/ui components following the established structure
+  - `mac-os-dock.tsx` - The dock component with magnification
+  - `window.tsx` - Draggable, resizable window component  
+  - `menu-bar.tsx` - MacOS-style top menu bar
+  - `desktop.tsx` - Main desktop orchestrator
+
+- **apps/** - Individual app components
+  - Each app is a self-contained React component
+  - Humorous but functional implementations
+
+### State Management (`/src/store/`)
+
+- **desktop-store.ts** - Zustand store for window management
+  - Window state (position, size, minimized, maximized)
+  - Persistent storage with localStorage
+  - Focus management and z-index handling
+
+### Configuration (`/src/lib/`)
+
+- **app-registry.ts** - Central registry for all apps
+  - Maps app IDs to components, icons, and default sizes
+  - Easy to extend with new apps
+
+## 🎨 Design System
+
+The project follows shadcn/ui structure with a custom MacOS theme:
+
+### Why `/components/ui`?
+
+This folder structure follows shadcn/ui defaults for several reasons:
+
+1. **Predictable Imports** - Consistent `@/components/ui/*` imports
+2. **Component Collocation** - UI primitives grouped together  
+3. **Community Standard** - Matches expected React/Next.js patterns
+4. **Easy Extension** - Simple to add new shadcn components
+
+### Color System
+
+All colors use HSL values defined in CSS custom properties:
+
+- **MacOS Colors** - Authentic red/yellow/green traffic lights
+- **Glassmorphism** - Backdrop blur effects for dock and menus  
+- **Dark Theme** - Matches MacOS dark mode aesthetics
+- **Semantic Tokens** - Consistent color usage across components
+
+## 🚀 How can I edit this code?
 
 There are several ways of editing your application.
 

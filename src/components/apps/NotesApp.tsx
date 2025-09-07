@@ -5,104 +5,128 @@ const NotesApp: React.FC = () => {
   const [selectedNote, setSelectedNote] = useState(0);
   const [notes, setNotes] = useState([
     {
-      title: 'Life Goals',
-      content: `# Life Goals (Revised Edition #47)
+      title: 'About Gökmen Çelik',
+      content: `# Gökmen Çelik - Developer & Community Builder
 
-## Short Term Goals:
-- [ ] Stop making lists
-- [x] Make a list about stopping making lists
-- [ ] Find the irony in the above
+## Professional Profile
+**Independent developer and crypto community builder** turning ideas into usable products and engaged communities.
 
-## Long Term Goals:
-- Learn to parallel park (Year 12 of trying)
-- Finally understand what "cryptocurrency" actually is
-- Master the art of small talk without mentioning the weather
-- Develop actual hobbies beyond "watching Netflix"
+## Core Expertise
+- **End-to-end Development**: Smart contracts, APIs, frontend polish
+- **Community Operations**: Building and managing engaged crypto communities
+- **Web3 Technologies**: Blockchain, DeFi, and decentralized systems
+- **Developer Tooling**: Creating tools that enhance developer experience
 
-## Impossible Goals:
-- Remember where I put my keys
-- Keep plants alive for more than a month
-- Use all the apps I've downloaded
-- Actually finish reading those 47 books I started`,
+## Philosophy & Values
+- **Open Systems**: Believer in permissionless, transparent systems
+- **Sustainable Incentives**: Focus on long-term value creation
+- **Transparent Governance**: Advocating for clear, fair decision-making
+- **Real World Impact**: Bias for shipping and measurable results
+
+## Current Focus Areas
+- **Web3 Development**: Smart contracts and decentralized applications
+- **Developer Tooling**: Improving the developer experience
+- **Investment Strategy**: Exploring opportunities in crypto and tech
+- **Community Building**: Creating sustainable, engaged communities
+
+## Contact & Projects
+- **Personal Website**: gokmens.com
+- **Project Portfolio**: grainz.vercel.app
+- **Specialization**: Full-stack development with Web3 focus`,
       date: 'Today',
       folder: 'Personal',
       starred: true
     },
     {
-      title: 'Meeting Notes',
-      content: `# Meeting That Could Have Been an Email #247
+      title: 'Web3 Development Notes',
+      content: `# Web3 Development Strategy
 
-**Date:** Today (unfortunately)
-**Duration:** 2 hours (felt like 12)
-**Attendees:** Too many
+## Smart Contract Development
+- Focus on gas optimization and security
+- Implement comprehensive testing suites
+- Use established patterns and libraries
+- Consider upgradeability and governance
 
-## Key Takeaways:
-- We need more meetings to discuss our meetings
-- Someone said "synergy" 14 times (I was counting)
-- The real meeting will happen in the hallway after
-- Action items will be forgotten by tomorrow
+## API Development
+- RESTful APIs for blockchain interaction
+- Real-time data feeds for DeFi protocols
+- Rate limiting and caching strategies
+- Documentation and developer experience
 
-## New Buzzwords Discovered:
-- "Ideate" (just say "think", Karen)
-- "Circle back" (the corporate version of "never")
-- "Low-hanging fruit" (there is no fruit here)
+## Frontend Polish
+- Intuitive user interfaces for complex DeFi operations
+- Mobile-first responsive design
+- Progressive Web App capabilities
+- Accessibility and user experience optimization
 
-## Next Steps:
-- Schedule a meeting to discuss these meeting notes
-- Create a PowerPoint about why we need fewer PowerPoints
-- Touch base to discuss touching bases`,
+## Community Building
+- Sustainable incentive mechanisms
+- Transparent governance processes
+- Educational content and resources
+- Long-term engagement strategies`,
       date: '2 hours ago',
+      folder: 'Work',
+      starred: true
+    },
+    {
+      title: 'Project Ideas',
+      content: `# Project Pipeline & Ideas
+
+## Active Projects
+- **Gokmens.com**: Personal portfolio and blog
+- **Grainz.vercel.app**: Web3 project showcase
+- **Community Tools**: Developer-focused utilities
+
+## Upcoming Ideas
+- **DeFi Analytics Dashboard**: Real-time protocol metrics
+- **Developer Toolkit**: Smart contract deployment automation
+- **Community Governance Platform**: Transparent voting mechanisms
+- **Educational Platform**: Web3 learning resources
+
+## Investment Opportunities
+- **Early-stage Web3 projects**: Focus on utility and adoption
+- **Developer tooling companies**: Improving ecosystem infrastructure
+- **Community-driven protocols**: Sustainable tokenomics
+- **Real-world integration**: Bridging crypto and traditional finance
+
+## Technology Stack
+- **Frontend**: React, TypeScript, Tailwind CSS
+- **Backend**: Node.js, Python, Rust
+- **Blockchain**: Ethereum, Solana, Polygon
+- **Tools**: Vercel, GitHub, Docker`,
+      date: 'Yesterday',
       folder: 'Work',
       starred: false
     },
     {
-      title: 'Grocery List',
-      content: `# Things I Definitely Need (But Will Forget to Buy)
+      title: 'Community Building Strategy',
+      content: `# Community Building & Operations
 
-## Essential Items:
-- Milk (because cereal is a food group)
-- Bread (the foundation of civilization)
-- Eggs (for that omelet I'll never make)
-- Coffee (liquid motivation)
+## Core Principles
+- **Permissionless Systems**: Open access and participation
+- **Sustainable Incentives**: Long-term value alignment
+- **Transparent Governance**: Clear decision-making processes
+- **Real Impact**: Focus on measurable outcomes
 
-## Items I Don't Need But Will Buy Anyway:
-- Fancy cheese that will expire unused
-- That weird fruit I've never tried
-- Organic something-or-other (it's healthier, right?)
-- Ice cream (for "emergencies")
+## Engagement Strategies
+- **Educational Content**: Tutorials, guides, and resources
+- **Regular Communication**: Updates, announcements, and feedback
+- **Community Events**: AMAs, workshops, and networking
+- **Recognition Programs**: Rewarding valuable contributions
 
-## Things I'll Remember Only After Getting Home:
-- The ONE thing I actually went to the store for
-- Cat food (sorry, Mr. Whiskers)
-- Toilet paper (always toilet paper)
+## Governance Framework
+- **Proposal System**: Structured decision-making process
+- **Voting Mechanisms**: Fair and transparent voting
+- **Implementation Tracking**: Clear execution and accountability
+- **Feedback Loops**: Continuous improvement based on community input
 
-*Note to self: Actually bring this list to the store instead of leaving it on the counter again.*`,
-      date: 'Yesterday',
-      folder: 'Personal',
-      starred: false
-    },
-    {
-      title: 'Random Thoughts',
-      content: `# 3 AM Philosophical Musings
-
-## Questions That Keep Me Awake:
-- Why do we park in driveways and drive on parkways?
-- If nothing sticks to Teflon, how does Teflon stick to the pan?
-- Why do we call it "rush hour" when nobody's moving?
-
-## Shower Thoughts Archive:
-- Maybe procrastination is just the art of keeping up with yesterday
-- Social media is basically showing off to people we don't actually like
-- "Sleep" is just death being shy
-
-## Important Realizations:
-- I spend more time choosing what to watch than actually watching
-- My phone knows me better than I know myself
-- Adult life is mostly just saying "I should really..." and then not doing it
-
-*Written at 3:17 AM because my brain apparently has no chill.*`,
+## Success Metrics
+- **Community Growth**: Active participants and contributors
+- **Engagement Levels**: Discussion quality and frequency
+- **Project Adoption**: Usage of community-developed tools
+- **Long-term Sustainability**: Self-sustaining ecosystem`,
       date: '3 days ago',
-      folder: 'Personal',
+      folder: 'Work',
       starred: true
     }
   ]);

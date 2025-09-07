@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Delete, RotateCcw } from 'lucide-react';
 
 const CalculatorApp: React.FC = () => {
   const [display, setDisplay] = useState('0');
@@ -36,7 +37,7 @@ const CalculatorApp: React.FC = () => {
     switch (operation) {
       case '+':
         return firstValue + secondValue;
-      case '-':
+      case '−':
         return firstValue - secondValue;
       case '×':
         return firstValue * secondValue;
@@ -85,17 +86,25 @@ const CalculatorApp: React.FC = () => {
     }
   };
 
+  const deleteLast = () => {
+    if (display.length > 1) {
+      setDisplay(display.slice(0, -1));
+    } else {
+      setDisplay('0');
+    }
+  };
+
   const Button: React.FC<{ 
     onClick: () => void; 
     className?: string; 
     children: React.ReactNode;
     type?: 'number' | 'operation' | 'function';
   }> = ({ onClick, className = '', children, type = 'number' }) => {
-    const baseClasses = "h-12 rounded font-medium transition-all active:scale-95";
+    const baseClasses = "h-14 w-14 rounded-full font-medium transition-all duration-150 active:scale-95 flex items-center justify-center text-lg";
     const typeClasses = {
-      number: "bg-muted hover:bg-muted/80 text-foreground",
-      operation: "bg-primary hover:bg-primary/90 text-primary-foreground",
-      function: "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
+      number: "bg-gray-600 hover:bg-gray-500 text-white",
+      operation: "bg-orange-500 hover:bg-orange-400 text-white",
+      function: "bg-gray-500 hover:bg-gray-400 text-white"
     };
     
     return (
@@ -109,61 +118,58 @@ const CalculatorApp: React.FC = () => {
   };
 
   return (
-    <div className="h-full bg-white p-6 flex flex-col">
+    <div className="h-full bg-black p-6 flex flex-col">
       {/* Display */}
-      <div className="mb-6 p-6 bg-gray-900 rounded-2xl text-right">
-        <div className="text-3xl font-mono text-white truncate" title={display}>
-          {display}
-        </div>
-        {previousValue !== null && operation && (
-          <div className="text-sm text-gray-400 mt-1">
-            {previousValue} {operation}
+      <div className="mb-8 flex-1 flex flex-col justify-end">
+        <div className="text-right">
+          <div className="text-6xl font-light text-white truncate mb-2" style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>
+            {display}
           </div>
-        )}
+          {previousValue !== null && operation && (
+            <div className="text-xl text-gray-400 mb-4">
+              {previousValue} {operation}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Button Grid */}
-      <div className="grid grid-cols-4 gap-3 flex-1">
+      <div className="grid grid-cols-4 gap-3">
         {/* Row 1 */}
-        <Button onClick={clear} type="function" className="bg-gray-200 hover:bg-gray-300 text-gray-800">C</Button>
-        <Button onClick={toggleSign} type="function" className="bg-gray-200 hover:bg-gray-300 text-gray-800">±</Button>
-        <Button onClick={inputPercent} type="function" className="bg-gray-200 hover:bg-gray-300 text-gray-800">%</Button>
-        <Button onClick={() => inputOperation('÷')} type="operation" className="bg-orange-500 hover:bg-orange-600 text-white">÷</Button>
+        <Button onClick={deleteLast} type="function">
+          <Delete className="w-5 h-5" />
+        </Button>
+        <Button onClick={clear} type="function">AC</Button>
+        <Button onClick={inputPercent} type="function">%</Button>
+        <Button onClick={() => inputOperation('÷')} type="operation">÷</Button>
 
         {/* Row 2 */}
-        <Button onClick={() => inputNumber('7')} className="bg-gray-100 hover:bg-gray-200 text-gray-800">7</Button>
-        <Button onClick={() => inputNumber('8')} className="bg-gray-100 hover:bg-gray-200 text-gray-800">8</Button>
-        <Button onClick={() => inputNumber('9')} className="bg-gray-100 hover:bg-gray-200 text-gray-800">9</Button>
-        <Button onClick={() => inputOperation('×')} type="operation" className="bg-orange-500 hover:bg-orange-600 text-white">×</Button>
+        <Button onClick={() => inputNumber('7')}>7</Button>
+        <Button onClick={() => inputNumber('8')}>8</Button>
+        <Button onClick={() => inputNumber('9')}>9</Button>
+        <Button onClick={() => inputOperation('×')} type="operation">×</Button>
 
         {/* Row 3 */}
-        <Button onClick={() => inputNumber('4')} className="bg-gray-100 hover:bg-gray-200 text-gray-800">4</Button>
-        <Button onClick={() => inputNumber('5')} className="bg-gray-100 hover:bg-gray-200 text-gray-800">5</Button>
-        <Button onClick={() => inputNumber('6')} className="bg-gray-100 hover:bg-gray-200 text-gray-800">6</Button>
-        <Button onClick={() => inputOperation('-')} type="operation" className="bg-orange-500 hover:bg-orange-600 text-white">-</Button>
+        <Button onClick={() => inputNumber('4')}>4</Button>
+        <Button onClick={() => inputNumber('5')}>5</Button>
+        <Button onClick={() => inputNumber('6')}>6</Button>
+        <Button onClick={() => inputOperation('−')} type="operation">−</Button>
 
         {/* Row 4 */}
-        <Button onClick={() => inputNumber('1')} className="bg-gray-100 hover:bg-gray-200 text-gray-800">1</Button>
-        <Button onClick={() => inputNumber('2')} className="bg-gray-100 hover:bg-gray-200 text-gray-800">2</Button>
-        <Button onClick={() => inputNumber('3')} className="bg-gray-100 hover:bg-gray-200 text-gray-800">3</Button>
-        <Button onClick={() => inputOperation('+')} type="operation" className="bg-orange-500 hover:bg-orange-600 text-white">+</Button>
+        <Button onClick={() => inputNumber('1')}>1</Button>
+        <Button onClick={() => inputNumber('2')}>2</Button>
+        <Button onClick={() => inputNumber('3')}>3</Button>
+        <Button onClick={() => inputOperation('+')} type="operation">+</Button>
 
         {/* Row 5 */}
         <Button 
           onClick={() => inputNumber('0')} 
-          className="col-span-2 bg-gray-100 hover:bg-gray-200 text-gray-800"
+          className="col-span-2 w-auto"
         >
           0
         </Button>
-        <Button onClick={inputDecimal} className="bg-gray-100 hover:bg-gray-200 text-gray-800">.</Button>
-        <Button onClick={performCalculation} type="operation" className="bg-orange-500 hover:bg-orange-600 text-white">=</Button>
-      </div>
-
-      {/* Footer message */}
-      <div className="mt-6 text-center">
-        <div className="text-xs text-gray-500">
-          "Math: The only place where people buy 64 watermelons and no one questions it."
-        </div>
+        <Button onClick={inputDecimal}>,</Button>
+        <Button onClick={performCalculation} type="operation">=</Button>
       </div>
     </div>
   );
